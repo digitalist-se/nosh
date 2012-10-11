@@ -1,6 +1,5 @@
-<?php
 #!/usr/bin/env php
-# app/console
+<?php
 
 require 'vendor/autoload.php';
 
