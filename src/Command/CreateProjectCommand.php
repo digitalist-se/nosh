@@ -61,6 +61,7 @@ class CreateProjectCommand extends Command
     }
     $variables = array('core_version' => '7.15');
     file_put_contents($path . '/' . 'platform.make', $twig->render('project/platform.make', $variables));
+    file_put_contents($path . '/' . '.gitignore', $twig->render('project/gitignore', $variables));
     if ($dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
       $output->writeln("Building installation profile...");
       system("drush make --no-core --contrib-destination={$profile_path} {$profile_path}/{$profile_name}.make");
