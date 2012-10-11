@@ -1,0 +1,20 @@
+<?php
+/**
+ * @file
+ * Example install file.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function {{ profile }}_install() {
+  // We use seven as our admin theme.
+  theme_enable(array('seven'));
+  $variables = array(
+    'admin_theme' => 'seven',
+    'node_admin_theme' => 1,
+  );
+  foreach ($variables as $key => $variable) {
+    variable_set($key, $variable);
+  }
+}
