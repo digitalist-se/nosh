@@ -1,0 +1,17 @@
+{
+    "name": "fabsor/nosh",
+    "description": "A cli tool to scaffold NodeStream profiles and projects",
+    "authors": [
+        {
+            "name": "Fabian Sorqvist",
+            "email": "fabian@sorqvist.nu"
+        }
+    ],
+    "require": {
+      "twig/twig": "1.*",
+      "symfony/console": "2.*"
+    },
+    "autoload": {
+      "psr-0": { "Command": "src/" }
+    }
+}
