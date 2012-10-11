@@ -46,13 +46,13 @@ class CreateProjectCommand extends Command
       throw new \Exception("Could not download Drupal.");
     }
     system("mv {$path}/drupal-7.15 {$path}/web");
-    if ($dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question>')) {
+    if ($dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question> ')) {
       $arguments = array(
         'command' => 'create-profile',
       );
       $profile_name = $input->getOption('profile-name');
       if (empty($profile_name)) {
-        $profile_name = $dialog->ask($output, '<question>Enter the name of the profile</question>');
+        $profile_name = $dialog->ask($output, '<question>Enter the name of the profile:</question> ');
       }
       $arguments['path'] = $profile_path = $path . '/web/profiles/' . $profile_name;
       $command = $this->getApplication()->find('create-profile');
@@ -61,7 +61,7 @@ class CreateProjectCommand extends Command
     }
     $variables = array('core_version' => '7.15');
     file_put_contents($path . '/' . 'platform.make', $twig->render('project/platform.make', $variables));
-    if ($dialog->askConfirmation($output, 'Do you want to build your profile now?')) {
+    if ($dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
       $output->writeln("Building installation profile...");
       system("drush make --no-core --contrib-destination={$profile_path} {$profile_path}/{$profile_name}.make");
     }

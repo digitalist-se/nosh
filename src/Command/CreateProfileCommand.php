@@ -35,7 +35,7 @@ class CreateProfileCommand extends Command
     $title = $input->getOption('title');
     $description = $input->getOption('description');
     if (empty($title)) {
-      $title = $dialog->ask($output, '<question>Enter the title of the profile</question>');
+      $title = $dialog->ask($output, '<question>Enter the title of the profile:</question> ');
     }
     if (empty($description)) {
       $description = $dialog->ask($output, '<question>Enter the description of the profile</question>');
