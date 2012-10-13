@@ -41,11 +41,12 @@ class CreateProjectCommand extends Command
     $name = basename($path);
     // Fetch Drupal.
     $return_val = 1;
-    system('drush dl drupal-7.15 --destination=' . $path, $return_val);
+    $output->writeln("Fetching Drupal");
+    passthru('drush dl drupal-7.15 --destination=' . $path, $return_val);
     if ($return_val) {
       throw new \Exception("Could not download Drupal.");
     }
-    system("mv {$path}/drupal-7.15 {$path}/web");
+    passthru("mv {$path}/drupal-7.15 {$path}/web");
     if ($dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question> ')) {
       $arguments = array(
         'command' => 'create-profile',
@@ -58,13 +59,24 @@ class CreateProjectCommand extends Command
       $command = $this->getApplication()->find('create-profile');
       $input = new ArrayInput($arguments);
       $returnCode = $command->run($input, $output);
+      if ($dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
+        $output->writeln("Building installation profile...");
+        passthru("drush make -y --no-core --contrib-destination={$profile_path} {$profile_path}/{$profile_name}.make");
+      }
     }
     $variables = array('core_version' => '7.15');
     file_put_contents($path . '/' . 'platform.make', $twig->render('project/platform.make', $variables));
     file_put_contents($path . '/' . '.gitignore', $twig->render('project/gitignore', $variables));
-    if ($dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
-      $output->writeln("Building installation profile...");
-      system("drush make --no-core --contrib-destination={$profile_path} {$profile_path}/{$profile_name}.make");
+    file_put_contents($path . '/' . 'build', $twig->render('project/build', $variables));
+    exec('chmod +x ' . $path . '/' . 'build');
+    if ($dialog->askConfirmation($output, 'Do you want to use vagrant for this project?')) {
+      $command = $this->getApplication()->find('vagrantify');
+      $arguments = array(
+        'command' => 'create-profile',
+        '--path' => $path,
+      );
+      $input = new ArrayInput($arguments);
+      $returnCode = $command->run($input, $output);
     }
   }
 
