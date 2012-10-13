@@ -1,0 +1,18 @@
+#!/bin/bash
+# This is a simple version of the fabric file provided that can be used to
+# build the system.
+
+if [ -d web ]; then
+    mv web web-old
+fi
+
+drush make --working-copy --no-gitinfofile platform.make web
+
+if [ -d web-old ]; then
+    # Sites all should be populated by our make file, so lets' remove that.
+    rm -rf web-old/sites/all
+    mv web/sites/all web-old/sites/.
+    rm -rf web/sites
+    mv web-old/sites web/sites
+    rm -rf web-old
+fi
