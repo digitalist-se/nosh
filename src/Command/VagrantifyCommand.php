@@ -15,7 +15,8 @@ class VagrantifyCommand extends Command
   protected function configure()
   {
     $this->setName('vagrantify')
-      ->setDescription('Add a vagrant configuration capable of running Drupal sites.');
+      ->setDescription('Add a vagrant configuration capable of running Drupal sites.')
+      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, "The path to the project. The current working directory will be used if this isn't specified.", ".");
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
@@ -29,6 +30,8 @@ class VagrantifyCommand extends Command
       'php' => 'https://github.com/nodeone/puppet-php.git',
       'postfix' => 'https://github.com/nodeone/puppet-postfix.git',
     );
+    $path = $input->getOption('path');
+    chdir($path);
     $dialog = $this->getHelperSet()->get('dialog');
     $twig = $this->getTwig();
     // Create a manifests folder.
