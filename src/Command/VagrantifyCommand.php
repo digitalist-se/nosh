@@ -44,12 +44,12 @@ class VagrantifyCommand extends Command
     // Get latest version of all modules.
     foreach ($modules as $name => $module) {
       $module_path = "manifests/modules/$name";
-      if (is_dir($module_path) && is_dir("{$module_path}/.git")) {
-        exec("git --git-dir={$module_path} pull");
+      if (is_dir($module_path)) {
+        exec("rm -rf {$module_path}");
       }
-      else {
-        exec("git clone $module $module_path");
-      }
+      exec("git clone $module $module_path");
+      // Remove the git repository to avoid conflicts.
+      exec("rm -rf $module_path/.git");
     }
     // Generate vagrantfile and manifest.
     file_put_contents('Vagrantfile', $twig->render("vagrant/Vagrantfile"));
