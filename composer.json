@@ -12,6 +12,6 @@
       "symfony/console": "2.*"
     },
     "autoload": {
-      "psr-0": { "Command": "src/" }
+      "psr-0": { "Command": "src/", "Util": "src/" }
     }
 }
