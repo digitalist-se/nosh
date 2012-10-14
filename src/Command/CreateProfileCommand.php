@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Util\DrupalReleaseFetcher;
 
 /**
  * Command for creating projects (also called platforms).
@@ -28,9 +29,7 @@ class CreateProfileCommand extends Command
     if (is_dir($path)) {
        throw new \Exception("The directory already exists.");
     }
-    if (!is_dir($path)) {
-      mkdir($path);
-    }
+    mkdir($path);
     $dialog = $this->getHelperSet()->get('dialog');
     $title = $input->getOption('title');
     $description = $input->getOption('description');
@@ -42,11 +41,18 @@ class CreateProfileCommand extends Command
     }
     $name = basename($path);
     $twig = $this->getTwig();
+    // What's the latest release of NS Core?
+    $fetcher = new DrupalReleaseFetcher();
+    $release = $fetcher->getReleaseInfo('ns_core', '7.x')->currentRelease();
+    $version = "{$release['major']}.{$release['patch']}";
+    if (!empty($release['extra'])) {
+      $version .= "-{$release['extra']}";
+    }
     $projects = array(
       'ns_core' => array(
         'name' => 'ns_core',
         'type' => 'module',
-        'version' => '7.x-2.0-beta5',
+        'version' => $version,
         'subdir' => 'contrib',
       ),
     );
