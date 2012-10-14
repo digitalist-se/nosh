@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Util\DrupalReleaseFetcher;
 
 /**
  * Command for creating projects (also called platforms).
@@ -27,6 +28,7 @@ class CreateProjectCommand extends Command
     foreach ($this->options as $option => $description) {
       $this->addOption($option, null, InputOption::VALUE_NONE, $description);
     }
+    $this->addOption('api', null, InputOption::VALUE_OPTIONAL, 'API version. Defaults to 7.x', '7.x');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
@@ -40,13 +42,17 @@ class CreateProjectCommand extends Command
     $twig = $this->getTwig();
     $name = basename($path);
     // Fetch Drupal.
-    $return_val = 1;
+    $returnVal = 1;
     $output->writeln("Fetching Drupal");
-    passthru('drush dl drupal-7.15 --destination=' . $path, $return_val);
-    if ($return_val) {
+    $fetcher = new DrupalReleaseFetcher();
+    $api = $input->getOption('api');
+    $release = $fetcher->getReleaseInfo('drupal', $api)->currentRelease();
+    $drupalIdentifier = "drupal-{$release['version']}";
+    passthru("drush dl $drupalIdentifier --destination={$path}", $returnVal);
+    if ($returnVal) {
       throw new \Exception("Could not download Drupal.");
     }
-    passthru("mv {$path}/drupal-7.15 {$path}/web");
+    passthru("mv {$path}/{$drupalIdentifier} {$path}/web");
     if ($dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question> ')) {
       $arguments = array(
         'command' => 'create-profile',
