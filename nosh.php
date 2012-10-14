@@ -9,7 +9,7 @@ use Command\CreateProfileCommand;
 use Command\VagrantifyCommand;
 
 
-$application = new Application();
+$application = new Application("Nodestream Shell", "0.1");
 $application->add(new CreateProjectCommand);
 $application->add(new VagrantifyCommand);
 $application->add(new CreateProfileCommand);
