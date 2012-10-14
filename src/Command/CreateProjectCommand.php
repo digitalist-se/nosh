@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains the CreateProjectCommand.
+ */
 namespace Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -19,6 +23,7 @@ class CreateProjectCommand extends Command
     'profile-title' => 'The title of a profile',
     'profile-description' => 'A profile description',
   );
+
   protected function configure()
   {
     $this->setName('create-project')
@@ -26,8 +31,12 @@ class CreateProjectCommand extends Command
       ->addArgument('path', InputArgument::REQUIRED, 'The path to the project');
 
     foreach ($this->options as $option => $description) {
-      $this->addOption($option, null, InputOption::VALUE_NONE, $description);
+      $this->addOption($option, null, InputOption::VALUE_OPTIONAL, $description, false);
     }
+    $this->addOption('use-vagrant', null, InputOption::VALUE_NONE, "Use vagrant for this project");
+    $this->addOption('create-profile', null, InputOption::VALUE_NONE, "Create an installation profile");
+    $this->addOption('build-profile', null, InputOption::VALUE_NONE, "Build the installation profile");
+
     $this->addOption('api', null, InputOption::VALUE_OPTIONAL, 'API version. Defaults to 7.x', '7.x');
   }
 
@@ -53,7 +62,7 @@ class CreateProjectCommand extends Command
       throw new \Exception("Could not download Drupal.");
     }
     passthru("mv {$path}/{$drupalIdentifier} {$path}/web");
-    if ($dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question> ')) {
+    if ($api == '7.x' && ($input->getOption('create-profile') || $dialog->askConfirmation($output, '<question>Do you want to create an installation profile?</question> '))) {
       $arguments = array(
         'command' => 'create-profile',
       );
@@ -63,9 +72,9 @@ class CreateProjectCommand extends Command
       }
       $arguments['path'] = $profile_path = $path . '/web/profiles/' . $profile_name;
       $command = $this->getApplication()->find('create-profile');
-      $input = new ArrayInput($arguments);
-      $returnCode = $command->run($input, $output);
-      if ($dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
+      $cmdInput = new ArrayInput($arguments);
+      $returnCode = $command->run($cmdInput, $output);
+      if ($input->getOption('build-profile') ||  $dialog->askConfirmation($output, '<question>Do you want to build your profile now?</question> ')) {
         $output->writeln("Building installation profile...");
         passthru("drush make -y --no-core --contrib-destination={$profile_path} {$profile_path}/{$profile_name}.make");
       }
@@ -75,7 +84,7 @@ class CreateProjectCommand extends Command
     file_put_contents($path . '/' . '.gitignore', $twig->render('project/gitignore', $variables));
     file_put_contents($path . '/' . 'build', $twig->render('project/build', $variables));
     exec('chmod +x ' . $path . '/' . 'build');
-    if ($dialog->askConfirmation($output, 'Do you want to use vagrant for this project?')) {
+    if ($input->getOption('use-vagrant') || $dialog->askConfirmation($output, '<question>Do you want to use vagrant for this project?</question> ')) {
       $command = $this->getApplication()->find('vagrantify');
       $arguments = array(
         'command' => 'create-profile',
