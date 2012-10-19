@@ -12,11 +12,25 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class VagrantifyCommand extends Command
 {
+  protected $variableOptions = array(
+    'webroot',
+    'ip',
+    'hostname',
+    'boxname',
+    'boxurl'
+  );
   protected function configure()
   {
     $this->setName('vagrantify')
       ->setDescription('Add a vagrant configuration capable of running Drupal sites.')
-      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, "The path to the project. The current working directory will be used if this isn't specified.", ".");
+      ->addOption('path', null, InputOption::VALUE_OPTIONAL, "The path to the project. The current working directory will be used if this isn't specified.", ".")
+      ->addOption('hostname', null, InputOption::VALUE_OPTIONAL, "The hostname of the virtual machine. Defaults to devbox.dev", "devbox.dev")
+      ->addOption('webroot', null, InputOption::VALUE_OPTIONAL, "The drupal web root. Defaults to web.", './web')
+      ->addOption('ip', null, InputOption::VALUE_OPTIONAL, "IP Address of the new box. Defaults to 192.168.50.2", "192.168.50.2")
+      ->addOption('boxname', null, InputOption::VALUE_OPTIONAL, "Box name. Defaults to precise64.", 'precise64')
+      ->addOption('boxurl', null, InputOption::VALUE_OPTIONAL, "Box URL. Defaults to http://files.vagrantup.com/precise64.box", 'http://files.vagrantup.com/precise64.box');
+
+
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
@@ -51,9 +65,13 @@ class VagrantifyCommand extends Command
       // Remove the git repository to avoid conflicts.
       exec("rm -rf $module_path/.git");
     }
+    $variables = array();
+    foreach ($this->variableOptions as $option) {
+      $variables[$option] = $input->getOption($option);
+    }
     // Generate vagrantfile and manifest.
-    file_put_contents('Vagrantfile', $twig->render("vagrant/Vagrantfile"));
-    file_put_contents('manifests/manifest.pp', $twig->render("vagrant/manifest.pp"));
+    file_put_contents('Vagrantfile', $twig->render("vagrant/Vagrantfile", $variables));
+    file_put_contents('manifests/manifest.pp', $twig->render("vagrant/manifest.pp", $variables));
   }
 
   protected function getTwig()
