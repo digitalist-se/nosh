@@ -6,7 +6,7 @@ class { 'postfix': }
 
 class { 'mysql':
   local_only     => true,
-  hostname => '33.33.33.10'
+  hostname => "{{ hostname }}"
 }
 
 apache::vhost { "drupal": }

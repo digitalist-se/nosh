@@ -1,15 +1,16 @@
 Vagrant::Config.run do |config|
     # Every Vagrant virtual environment requires a box to build off of.
-    config.vm.box = "precise64"
+    config.vm.box = "{{ boxname }}"
 
     # The url from where the 'config.vm.box' box will be fetched if it
     # doesn't already exist on the user's system.
-    config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+    config.vm.box_url = "{{ boxurl }}"
 
     # Assign this VM to a host only network IP, allowing you to access it
     # via the IP.
-    config.vm.network :hostonly, "33.33.33.10"
+    config.vm.network :hostonly, "{{ ip }}"
     config.vm.customize ["modifyvm", :id, "--memory", "768"]
+    config.vm.host_name = "{{ hostname }}"
 
     # Provisioning settings.
     config.vm.provision :puppet do |puppet|
@@ -18,5 +19,5 @@ Vagrant::Config.run do |config|
       puppet.module_path = "manifests/modules"
     end
     # The path to the platform
-    config.vm.share_folder("v-root", "/var/www", "./web", :nfs => true)
+    config.vm.share_folder("v-root", "/var/www", "{{ webroot }}", :nfs => true)
 end
