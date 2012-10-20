@@ -9,7 +9,7 @@ class DrupalProject {
   protected $currentRelease, $title, $shortName;
   public function __construct($data, $api_version)
   {
-    $this->api_version = $version;
+    $this->api_version = $api_version;
     $this->parseData($data);
   }
 
