@@ -9,7 +9,7 @@ class DrupalProject {
   protected $currentRelease, $title, $shortName;
   public function __construct($data, $api_version)
   {
-    $this->api_version = $api_version;
+    $this->apiVersion = $api_version;
     $this->parseData($data);
   }
 
@@ -57,10 +57,11 @@ class DrupalProject {
       }
       $matches = array();
       // The order of the extras. Higher is better.
-      $order = array('alpha', 'beta', 'rc');
-      $pattern = '/(alpha|beta|rc)([0-9]+)/';
+      $order = array('alpha', 'beta', 'rc', 'dev');
+      $pattern = '/(alpha|beta|rc|dev)([0-9]*)/';
       preg_match($pattern, $version1['extra'], $version1_matches);
-      preg_match($pattern, $version1['extra'], $version2_matches);
+      preg_match($pattern, $version2['extra'], $version2_matches);
+
       if (array_search($version1_matches[1], $order) > array_search($version2_matches[1], $order)) {
         return TRUE;
       }
