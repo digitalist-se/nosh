@@ -7,6 +7,7 @@ NodeStream shell is a set of tools that can be used to easily get going with dev
 * [Virtualbox](https://www.virtualbox.org/wiki/Downloads) 
 * [Vagrant](http://downloads.vagrantup.com)
 * [Drush](http://drupal.org/project/drush)
+* curl (on Linux <code> sudo apt-get install curl</code>)
 
 ## Installing
 * Clone the repository
