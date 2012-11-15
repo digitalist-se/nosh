@@ -11,27 +11,27 @@ NodeStream shell is a set of tools that can be used to easily get going with dev
 ## Installing
 * Clone the repository
 
-    git clone git@github.com:WKLive/nosh.git ~/nosh
+  git clone git@github.com:WKLive/nosh.git ~/nosh
 
 * Fetch composer (sensible defaults added to command here) 
 
-    getcomposer.org/installer | php -d detect_unicode=Off -d date.timezone=UTC
+  getcomposer.org/installer | php -d detect_unicode=Off -d date.timezone=UTC
 
 * Install Composer
 
-    cd ~/nosh
-    ./composer.phar install
+  cd ~/nosh
+  ./composer.phar install
 
 * Symlink Nosh to your bin
 
-    sudo ln -s ~/Nosh/nosh.php /usr/bin/nosh
+  sudo ln -s ~/Nosh/nosh.php /usr/bin/nosh
 
 ### Caveats
 * it probably not a bad idea to have run (outside the ~/nosh dir) Vagrant before testing Nosh
 
-    vagrant box add base http://files.vagrantup.com/precise64.box
-    vagrant init
-    vagrant up
+  vagrant box add base http://files.vagrantup.com/precise64.box
+  vagrant init
+  vagrant up
 
 ! don't forget to stop the initial Vagrant box and optionally destroy it
 
@@ -58,8 +58,8 @@ Mac OS X GUI hint: [Hosts.prefpane](https://github.com/specialunderwear/Hosts.pr
 
 ### New Vagrant based project
 
-    cd ~/My-Nosh-Projects
-    nosh create-project foo_bar
-    cd foo_bar
-    vagrant up
+  cd ~/My-Nosh-Projects
+  nosh create-project foo_bar
+  cd foo_bar
+  vagrant up
 
