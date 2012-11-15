@@ -16,7 +16,7 @@ NodeStream shell is a set of tools that can be used to easily get going with dev
 
 * Fetch composer (sensible defaults added to command here) 
 
-                getcomposer.org/installer | php -d detect_unicode=Off -d date.timezone=UTC
+                curl -s getcomposer.org/installer | php -d detect_unicode=Off -d date.timezone=UTC
 
 
 * Install Composer
