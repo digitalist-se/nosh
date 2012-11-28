@@ -3,7 +3,7 @@
  * @file
  * Parse the Drupal Release XML.
  */
-namespace Util;
+namespace Nosh\Util;
 
 /**
  * Fetch information from the release history API.

@@ -1,5 +1,5 @@
 {
-    "name": "fabsor/nosh",
+    "name": "WKLive/nosh",
     "description": "A cli tool to scaffold NodeStream profiles and projects",
     "authors": [
         {
@@ -12,6 +12,6 @@
       "symfony/console": "2.*"
     },
     "autoload": {
-      "psr-0": { "Command": "src/", "Util": "src/" }
+      "psr-0": { "Nosh": "src/" }
     }
 }

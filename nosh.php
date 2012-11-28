@@ -4,9 +4,9 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use Command\CreateProjectCommand;
-use Command\CreateProfileCommand;
-use Command\VagrantifyCommand;
+use Nosh\Command\CreateProjectCommand;
+use Nosh\Command\CreateProfileCommand;
+use Nosh\Command\VagrantifyCommand;
 
 
 $application = new Application("Nodestream Shell", "0.1");

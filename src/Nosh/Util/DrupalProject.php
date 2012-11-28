@@ -1,6 +1,6 @@
 <?php
 
-namespace Util;
+namespace Nosh\Util;
 
 /**
  * Representation of a Drupal project.
