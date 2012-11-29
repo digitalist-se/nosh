@@ -6,7 +6,6 @@ namespace Nosh\Util;
  * Representation of a Drupal project.
  */
 class DrupalProject {
-    protected $currentRelease, $title, $shortName;
     public function __construct($data, $api_version)
     {
         $this->apiVersion = $api_version;
@@ -22,6 +21,7 @@ class DrupalProject {
         $this->projectStatus = (string) $data->project_status;
         $this->link = (string) $data->link;
         $this->releases = array();
+        $this->current = FALSE;
         foreach ($data->releases->release as $release) {
             $releaseArr = array(
                 'version' => (string) $release->version,
@@ -30,7 +30,7 @@ class DrupalProject {
                 'extra' => (string) $release->version_extra,
                 'status' => (string) $release->status,
             );
-            $this->currentRelease = $this->compareRelease($releaseArr, $this->currentRelease);
+            $this->current = $this->compareRelease($releaseArr, $this->current);
             $this->releases[$releaseArr['version']] = $releaseArr;
         }
     }
@@ -45,6 +45,12 @@ class DrupalProject {
 
     protected function versionHigher($version1, $version2)
     {
+        if (empty($version2)) {
+            return $version1;
+        }
+        if (empty($version1)) {
+            return $version2;
+        }
         // Compare major and patch first.
         if (($version1['major'] > $version2['major']) || ($version1['patch'] > $version2['patch'])) {
             return TRUE;
@@ -55,7 +61,8 @@ class DrupalProject {
             if (empty($version2['extra'])) {
                 return FALSE;
             }
-            $matches = array();
+            $version1_matches = array();
+            $version2_matches = array();
             // The order of the extras. Higher is better.
             $order = array('alpha', 'beta', 'rc', 'dev');
             $pattern = '/(alpha|beta|rc|dev)([0-9]*)/';
@@ -74,6 +81,6 @@ class DrupalProject {
 
     function currentRelease()
     {
-        return $this->currentRelease;
+        return $this->current;
     }
 }
