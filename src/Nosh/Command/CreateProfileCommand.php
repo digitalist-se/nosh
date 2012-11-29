@@ -65,7 +65,7 @@ class CreateProfileCommand extends Command
 
   protected function getTwig()
   {
-    $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../templates');
+    $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../../templates');
     $twig = new \Twig_Environment($loader, array());
     return $twig;
   }
