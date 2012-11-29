@@ -8,7 +8,8 @@ namespace Nosh\Util;
 /**
  * Fetch information from the release history API.
  */
-class DrupalReleaseFetcher {
+class DrupalReleaseFetcher
+{
     /**
      * The url to the Drupal release info.
      */
