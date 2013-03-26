@@ -28,7 +28,7 @@ NodeStream shell is a set of tools that can be used to easily get going with dev
 
 * Symlink Nosh to your bin
 
-                sudo ln -s ~/Nosh/nosh.php /usr/bin/nosh
+                sudo ln -s ~/nosh/nosh.php /usr/bin/nosh
 
 
 ### Caveats
